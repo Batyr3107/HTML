@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Конвертация валют</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			background-color: #f3f4f6;
+			margin: 10;
+			padding: 10;
+			align-items: center;
+			min-height: 100;
+		}
+		.container {
+			background: #CD5C5C;
+			padding: 20px;
+			border-radius: 8px;
+			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+			width: 300px;
+		}
+		.container h1 {
+			text-align: center;
+			color: #333;
+			font-size: 24px;
+			margin-bottom: 20px;
+		}
+		.form-group {
+			margin-bottom: 15px;
+		}
+		.form-group label {
+			display: block;
+			color: #555;
+			margin-bottom: 5px;
+			font-size: 14px;
+		}
+		.form-group input, .form-group select {
+			width: 95%;
+			padding: 10px;
+			border: 3px solid #ddd;
+			border-radius: 5px;
+			font-size: 14px;
+		}
+		button {
+			width: 95%;
+			padding: 10px;
+			background: #4CAF50;
+			color: white;
+			border: none;
+			border-radius: 10px;
+			font-size: 16px;
+			cursor: pointer;
+		}
+		button:hover {
+			background: #45a049;
+		}
+		.results {
+			margin-top: 20px;
+			padding: 10px;
+			background: #f9f9f9;
+			border-radius: 5px;
+			text-align: center;
+		}
+		.results p {
+			font-size: 16px;
+			color: #333;
+			margin: 5px;
+		}
+		.results span {
+			font-weight: bold;
+			color: #FF4500;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<h1>Конвертация валют</h1>
+		<div class="form-group">
+			<label>Введите сумму:</label>
+			<input type="number" id="amount" placeholder="5000">
+		</div>
+		<div class="form-group">
+			<label>Валюта:</label>
+			<select id="currency">
+				<option value="KZT">KZT</option>
+				<option value="USD">USD</option>
+				<option value="EUR">EUR</option>
+			</select>
+		</div>
+		<div class="form-group">
+			<label>Тип:</label>
+			<select id="type">
+				<option value="buy">Покупка</option>
+				<option value="sell">Продажа</option>
+			</select>
+		</div>
+		<button onclick="convert()">Конвертировать</button>
+		<div class="results">
+			<p>KZT (тенге): <span id="kztResult">-</span></p>
+			<p>USD (доллар): <span id="usdResult">-</span></p>
+			<p>EUR (евро): <span id="eurResult">-</span></p>
+		</div>
+	</div>
+
+	<script>
+		function convert() {
+			let buyAndSell = {
+				USD: { buy: 429, sell: 431 },
+				EUR: { buy: 507, sell: 509 }
+			};
+
+			let amount = document.getElementById('amount').value;
+			let currency = document.getElementById('currency').value;
+			let type = document.getElementById('type').value;
+
+			let usdResult = "отсутствует";
+			let eurResult = "отсутствует";
+			let kztResult = "отсутствует";
+
+			if (currency === "KZT") {
+				if (type === "buy") {
+					usdResult = (amount / buyAndSell.USD.buy).toFixed(2);
+					eurResult = (amount / buyAndSell.EUR.buy).toFixed(2);
+				} else {
+					usdResult = (amount / buyAndSell.USD.sell).toFixed(2);
+					eurResult = (amount / buyAndSell.EUR.sell).toFixed(2);
+				}
+			} else if (currency === "USD") {
+				if (type === "buy") {
+					kztResult = (amount * buyAndSell.USD.buy).toFixed(2);
+					eurResult = ((amount * buyAndSell.USD.buy) / buyAndSell.EUR.buy).toFixed(2);
+				} else {
+					kztResult = (amount * buyAndSell.USD.sell).toFixed(2);
+					eurResult = ((amount * buyAndSell.USD.sell) / buyAndSell.EUR.sell).toFixed(2);
+				}
+			} else if (currency === "EUR") {
+				if (type === "buy") {
+					kztResult = (amount * buyAndSell.EUR.buy).toFixed(2);
+					usdResult = ((amount * buyAndSell.EUR.buy) / buyAndSell.USD.buy).toFixed(2);
+				} else {
+					kztResult = (amount * buyAndSell.EUR.sell).toFixed(2);
+					usdResult = ((amount * buyAndSell.EUR.sell) / buyAndSell.USD.sell).toFixed(2);
+				}
+			}
+
+			document.getElementById('usdResult').textContent = usdResult;
+			document.getElementById('kztResult').textContent = kztResult;
+			document.getElementById('eurResult').textContent = eurResult;
+		}
+	</script>
+</body>
+</html>
